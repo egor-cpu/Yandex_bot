@@ -17,7 +17,7 @@ async def exit_button_handler(message: types.Message, state: FSMContext):
     file = open("admins.txt", 'r')
     booli = 0
     for i in file:
-        if i == str(message.chat.id):
+        if i == str(message.chat.id) + "\n":
             booli = 1
     if booli == 0:
         await message.answer("У вас недостаточно доступа")

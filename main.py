@@ -32,12 +32,6 @@ console_handler.setFormatter(formatter)
 
 # Добавляем обработчики к логгеру
 logging.basicConfig(level=logging.DEBUG, handlers=[file_handler, console_handler])
-
-from create_report import *
-from download_report import *
-from edit_report import *
-from update_temple import *
-from Registration import *
 button_edit_report = KeyboardButton(text="Изменить Отчёт")
 button_download_report = KeyboardButton(text="Выгрузить отчёт")
 button_create_report = KeyboardButton(text="Создать отчёт")
@@ -45,6 +39,12 @@ button_update_temple = KeyboardButton(text="Обновить шаблоны")
 button_registration = KeyboardButton(text="Зарегистрироваться")
 
 greet_kb = ReplyKeyboardMarkup(keyboard=[[button_edit_report], [button_download_report], [button_create_report], [button_update_temple], [button_registration]], resize_keyboard=True)
+
+from create_report import *
+from download_report import *
+from edit_report import *
+from update_temple import *
+from Registration import *
 
 @dp.message(Command(commands=["start"]))
 async def start_command_handler(message: types.Message):

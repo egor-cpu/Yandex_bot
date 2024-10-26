@@ -15,13 +15,12 @@ class createstate(StatesGroup):
     waiting_for_choose_file_name = State()
 
 lengh = 0
-filenamesave = ""
 @dp.message(lambda message: message.text == "Создать отчёт")
 async def create_report(message: types.Message, state: FSMContext):
     file = open("admins.txt", 'r')
     booli = 0
     for i in file:
-        if i == str(message.chat.id):
+        if i == str(message.chat.id) + "\n":
             booli = 1
     if booli == 0:
         await message.answer("У вас недостаточно доступа")
@@ -41,7 +40,6 @@ async def create_report(message: types.Message, state: FSMContext):
 async def template_get(message: types.Message, state:FSMContext):
     folder_path = 'Шаблоны'
     files = os.listdir("Шаблоны")
-    global filenamesave
     file_name = message.text
     for i in range(lengh):
         if message.text in files[i]:
@@ -49,7 +47,8 @@ async def template_get(message: types.Message, state:FSMContext):
         elif message.text == str(i + 1):
             file_name = files[i]
     if os.path.exists(folder_path + "/" + file_name):
-        filenamesave = file_name
+        file = open("шаблон-файл.txt","a",encoding="utf-8")
+        file.write(file_name + "-")
         await message.answer("Дайте название файлу")
         await state.set_state(createstate.waiting_for_choose_file_name)
     else:
@@ -58,9 +57,10 @@ async def template_get(message: types.Message, state:FSMContext):
 
 @dp.message(createstate.waiting_for_choose_file_name)
 async def name_get(message: types.Message, state:FSMContext):
-    src = "Шаблоны/" + filenamesave
-    dst = "Отчёты"
-    shutil.copy(src,dst)
-    os.rename("Отчёты/" + filenamesave, "Отчёты/" + message.text)
-    await message.answer("Файл успешно создан на основе шаблона")
+    dst = "Отчёты/Пример1.xlsx"
+    shutil.copy("Отчёты/Пример.xlsx",dst)
+    os.rename("Отчёты/Пример1.xlsx", "Отчёты/" + message.text)
+    file = open("шаблон-файл.txt","a",encoding="utf-8")
+    file.write(message.text + ".xlsx" + "\n")
+    await message.answer("Файл успешно создан")
     await state.clear()
