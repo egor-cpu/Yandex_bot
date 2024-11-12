@@ -1,5 +1,5 @@
 import openpyxl
-from main import dp, bot
+from main import dp, bot, y
 import yadisk
 from aiogram import Bot, Dispatcher, types
 from dotenv import load_dotenv
@@ -48,7 +48,7 @@ async def template_get(message: types.Message, state:FSMContext):
             file_name = files[i]
     if os.path.exists(folder_path + "/" + file_name):
         file = open("шаблон-файл.txt","a",encoding="utf-8")
-        file.write(file_name + "-")
+        file.write(file_name + "+-")
         await message.answer("Дайте название файлу")
         await state.set_state(createstate.waiting_for_choose_file_name)
     else:
@@ -57,10 +57,11 @@ async def template_get(message: types.Message, state:FSMContext):
 
 @dp.message(createstate.waiting_for_choose_file_name)
 async def name_get(message: types.Message, state:FSMContext):
-    dst = "Отчёты/Пример1.xlsx"
-    shutil.copy("Отчёты/Пример.xlsx",dst)
-    os.rename("Отчёты/Пример1.xlsx", "Отчёты/" + message.text)
+    dst = "Отчёты/"+ str(message.text) + ".xlsx"
+    shutil.copy("Отчёты/Образец.xlsx",dst)
     file = open("шаблон-файл.txt","a",encoding="utf-8")
     file.write(message.text + ".xlsx" + "\n")
+    await message.answer("Занимаюсь работой с яндекс диском, подождите")
+    y.upload("Отчёты/" + message.text+ ".xlsx", "/tg test/Отчёты/" + message.text+ ".xlsx", overwrite=False)
     await message.answer("Файл успешно создан")
     await state.clear()
